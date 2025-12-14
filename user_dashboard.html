@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>MOOSI +</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='user_dashboard.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='asset/logo1.png') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="main-layout">
+        
+        <aside class="sidebar">
+            <div class="logo"><img src="{{ url_for('static', filename='asset/logo1.png') }}" alt="Logo MOOSI+">MOOSI +</div>
+            <div class="playlist-section">
+                <a href="{{ url_for('user_dashboard') }}" class="home-btn">
+                    <i class="fa-solid fa-house"></i> Dashboard 
+                </a>
+
+                <h3>PLAYLISTS</h3>
+
+                <form action="{{ url_for('action_create_playlist') }}" method="POST" class="create-playlist-form">
+                    <input type="text" name="new_playlist_name" placeholder="Playlist Baru..." required>
+                    <button type="submit"><i class="fa-solid fa-plus"></i> Buat</button>
+                </form>
+
+                <ul class="playlist-list">
+                    {% for name in playlists %}
+                    <li class="{{ 'active-playlist' if name == active_playlist_name }}">
+                        <a href="{{ url_for('user_dashboard', view='playlist', playlist=name) }}">
+                            <i class="fa-solid fa-music"></i> {{ name }}
+                        </a>
+                        
+                        <form action="{{ url_for('action_set_active_playlist', playlist_name=name) }}" method="POST" class="play-playlist-form" style="display:inline;">
+                             <button type="submit" title="Putar Playlist"><i class="fa-solid fa-play"></i></button>
+                        </form>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <form action="{{ url_for('logout') }}" method="POST" class="logout-form">
+                <button type="submit" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Logout ({{ username }})</button>
+            </form>
+        </aside>
+
+        <main class="content">
+            
+            <header class="content-header">
+                
+                <form action="{{ url_for('user_dashboard') }}" method="GET" class="search-form">
+                    <input type="hidden" name="view" value="library">
+                    <input type="text" name="query" placeholder="Cari lagu (Judul, Artis, Genre, ID)..." value="{{ request.args.get('query', '') }}">
+                    <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    {% if request.args.get('query') %}
+                        <a href="{{ url_for('user_dashboard') }}" class="clear-search-btn" title="Hapus Pencarian">&times;</a>
+                    {% endif %}
+                </form>
+                
+                <span class="view-title">
+                    {% if current_view_playlist %}
+                        {{ current_view_playlist }} 🎧
+                    {% else %}
+                        Today's Top Hits 🎵
+                    {% endif %}
+                </span>
+            </header>
+
+            <div class="song-list-container">
+                
+                {% if view_mode == 'library' %}
+                    
+                    <div class="queue-status-section">
+                        {% if explicit_queue_list %}
+                            <p class="queue-indicator">Antrian: 
+                                {% for song in explicit_queue_list %}
+                                    <span class="queue-song-title">{{ song.title }}{{ ", " if not loop.last }}</span>
+                                {% endfor %}
+                            </p>
+                        {% endif %}
+                    </div>
+                    
+                    <table class="song-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 5%;">ID</th>
+                                <th style="width: 30%;">JUDUL</th>
+                                <th style="width: 25%;">ARTIS</th>
+                                <th style="width: 15%;">GENRE</th>
+                                <th style="width: 25%;">AKSI</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for song in songs %}
+                            <tr class="{{ 'current-playing' if current_song and song.id == current_song.id }}">
+                                <td>{{ song.id }}</td>
+                                <td><span style="font-weight: 600;">{{ song.title }}</span></td>
+                                <td>{{ song.artist }}</td>
+                                <td>{{ song.genre }}</td>
+                                <td class="action-cell">
+                                    <div class="action-group">
+                                        <form action="{{ url_for('action_add_to_playlist', song_id=song.id) }}" method="POST" class="add-to-playlist-form">
+                                            <select name="playlist_name" required>
+                                                <option value="" disabled selected>Pilih Playlist</option>
+                                                {% for name in playlists %}
+                                                    <option value="{{ name }}">{{ name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <button type="submit" title="Tambahkan ke Playlist"><i class="fa-solid fa-plus"></i></button>
+                                        </form>
+
+                                        <form action="{{ url_for('action_add_to_explicit_queue', song_id=song.id) }}" method="POST" class="add-to-queue-form">
+                                            <button type="submit" title="Tambahkan ke Antrian"><i class="fa-solid fa-list-ol"></i></button>
+                                        </form>
+
+                                        <form action="{{ url_for('action_play_from_library', song_id=song.id, query=request.args.get('query', '')) }}" method="POST" style="display:inline;">
+                                            <button type="submit" title="Putar Lagu"><i class="fa-solid fa-play"></i></button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    
+                {% elif view_mode == 'playlist' %}
+                    <div class="playlist-info-section">
+                        <span class="sub-title">PLAYLIST</span>
+                        <h1 class="playlist-title">{{ current_view_playlist }}</h1>
+                        
+                        <div class="playlist-controls">
+                            <form action="{{ url_for('action_set_active_playlist', playlist_name=current_view_playlist) }}" method="POST" style="display: inline;">
+                                <button type="submit" class="primary-btn"><i class="fa-solid fa-play"></i> Putar Playlist</button>
+                            </form>
+                            
+                            <form action="{{ url_for('action_delete_playlist', playlist_name=current_view_playlist) }}" method="POST" style="display: inline;" onsubmit="return confirm('Anda yakin ingin menghapus playlist {{ current_view_playlist }}?');">
+                                <button type="submit" class="secondary-btn delete-btn"><i class="fa-solid fa-trash-can"></i> Hapus Playlist</button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="queue-status-section">
+                        {% if explicit_queue_list %}
+                            <p class="queue-indicator">Antrian: 
+                                {% for song in explicit_queue_list %}
+                                    <span class="queue-song-title">{{ song.title }}{{ ", " if not loop.last }}</span>
+                                {% endfor %}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <table class="song-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 5%;">#</th>
+                                <th style="width: 40%;">JUDUL</th>
+                                <th style="width: 25%;">ARTIS</th>
+                                <th style="width: 15%;">GENRE</th>
+                                <th style="width: 15%;">AKSI</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for song in songs %}
+                            <tr class="{{ 'current-playing' if current_song and song.id == current_song.id }}">
+                                <td>{{ loop.index }}</td>
+                                <td><span style="font-weight: 600;">{{ song.title }}</span></td>
+                                <td>{{ song.artist }}</td>
+                                <td>{{ song.genre }}</td>
+                                <td class="action-cell">
+                                    <div class="action-group">
+                                        
+                                        <form action="{{ url_for('action_add_to_explicit_queue', song_id=song.id) }}" method="POST" class="add-to-queue-form">
+                                            <button type="submit" title="Tambahkan ke Antrian"><i class="fa-solid fa-list-ol"></i></button>
+                                        </form>
+                                        
+                                        <form action="{{ url_for('action_play_from_playlist', playlist_name=current_view_playlist, song_id=song.id) }}" method="POST" style="display:inline;">
+                                            <button type="submit" title="Putar Lagu"><i class="fa-solid fa-play"></i></button>
+                                        </form>
+                                        
+                                        <form action="{{ url_for('action_remove_from_playlist', playlist_name=current_view_playlist, song_id=song.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus {{ song.title }} dari playlist {{ current_view_playlist }}?');">
+                                            <button type="submit" title="Hapus dari Playlist" class="delete-btn"><i class="fa-solid fa-trash-can"></i></button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+                
+            </div>
+            
+        </main>
+        
+        <footer class="player-bar">
+            <div class="song-info-player">
+                <i class="fa-solid fa-compact-disc"></i>
+                <div class="text-info">
+                    {% if current_song %}
+                        <div class="song-title">{{ current_song.title }}</div>
+                        <div class="song-artist">{{ current_song.artist }}</div>
+                    {% else %}
+                        <div class="song-title">Tidak Ada Lagu Diputar</div>
+                        <div class="song-artist">-</div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="player-controls">
+                <form action="{{ url_for('action_next_prev', action='prev') }}" method="POST" style="display:inline;">
+                    <button type="submit" title="Lagu Sebelumnya"><i class="fa-solid fa-backward-step"></i></button> 
+                </form>
+                
+                <form action="{{ url_for('action_stop') }}" method="POST" style="display:inline;">
+                    <button type="submit" id="play-stop-btn" title="Hentikan">
+                        <i class="fa-solid fa-circle-stop"></i>
+                    </button>
+                </form>
+                
+                <form action="{{ url_for('action_next_prev', action='next') }}" method="POST" style="display:inline;">
+                    <button type="submit" title="Lagu Selanjutnya"><i class="fa-solid fa-forward-step"></i></button>
+                </form>
+            </div>
+            
+            <div class="volume-control">
+                <i class="fa-solid fa-volume-low"></i>
+                <input type="range" min="0" max="100" value="70">
+                <i class="fa-solid fa-volume-high"></i>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>MOOSI +</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='admin_dashboard.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='asset/logo1.png') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> 
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="header">
+            <h1>MOOSI +</h1>
+            <div class="header-controls">
+                <span class="user-info">Edit Lagu</span>
+                <a href="{{ url_for('admin_dashboard') }}" class="logout-btn">Kembali ke Dashboard</a>
+            </div>
+        </header>
+        <main class="main-content">
+            
+            <div class="admin-rules-box">
+                <div class="rules-header">
+                    <i class="fa-solid fa-lock"></i> 
+                    <h3>Aturan Update Lagu !! </h3>
+                </div>
+                <ul>
+                    <li>
+                        <i class="fa-solid fa-user-shield check-icon"></i>
+                        <span class="rule-text">Hanya administrator yang memiliki akses untuk mengupdate data lagu.</span>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-circle-check check-icon"></i>
+                        <span class="rule-text"> Data lagu yang diperbarui harus sesuai dengan lagu yang ada di Library Global.</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="card edit-song-form-container">
+                <p class="song-id-info">ID Lagu: <strong>{{ song.id }}</strong></p> 
+
+                <form action="{{ url_for('admin_edit_song', song_id=song.id) }}" method="POST" class="add-song-form">
+                    <input type="text" name="title" placeholder="Judul Lagu" value="{{ song.title }}" required>
+                    <input type="text" name="artist" placeholder="Artis" value="{{ song.artist }}">
+                    <input type="text" name="genre" placeholder="Genre" value="{{ song.genre }}">
+                    
+                    <button type="submit" class="primary-btn">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Simpan Perubahan
+                    </button>
+                    <a href="{{ url_for('admin_dashboard') }}" class="cancel-btn">
+                        <i class="fa-solid fa-xmark"></i> Batalkan
+                    </a>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

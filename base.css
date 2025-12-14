@@ -1,0 +1,25 @@
+:root {
+    --primary-color: #1ed760; 
+    --background-dark: #000000; 
+    --sidebar-dark: #000000;
+    --content-dark: #121212; 
+    --card-dark: #181818; 
+    --text-primary: #FFFFFF;
+    --text-secondary: #B3B3B3;
+    --border-color: #282828;
+    --font-family: 'Open Sans', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-dark);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow: hidden; 
+}

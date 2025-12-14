@@ -1,0 +1,308 @@
+/* Container Layout */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: var(--content-dark);
+}
+.dashboard-container .header {
+    background-color: var(--sidebar-dark);
+    padding: 20px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+
+.dashboard-container h1 {
+    font-size: 1.8em;
+    color: var(--primary-color);
+}
+.dashboard-container .header-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.dashboard-container .user-info {
+    color: var(--text-secondary);
+}
+.dashboard-container .logout-btn {
+    color: var(--text-primary);
+    text-decoration: none;
+    padding: 8px 15px;
+    background-color: var(--card-dark);
+    border-radius: 50px;
+    transition: background-color 0.2s;
+}
+.dashboard-container .logout-btn:hover {
+    background-color: var(--border-color);
+}
+.dashboard-container .main-content {
+    padding: 30px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+/* Card Styles */
+.card {
+    background-color: var(--card-dark);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.main-content h2 {
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* Separator */
+.separator {
+    border: none;
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 40px 0;
+}
+
+
+/* Gaya Form Edit/Tambah Lagu */
+/* Gaya form utama */
+.add-song-form {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 15px;
+    align-items: center; 
+}
+
+/* Gaya untuk input */
+.add-song-form input[type="text"] {
+    flex-grow: 1; 
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--content-dark);
+    color: var(--text-primary);
+    transition: border-color 0.2s;
+    min-width: 150px; 
+    box-sizing: border-box;
+}
+
+.add-song-form input[type="text"]:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+/*Gaya untuk tombol Simpan Perubahan / Tambah Lagu (Primary Button)*/
+.primary-btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 50px; 
+    background-color: var(--primary-color); 
+    color: #000; 
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    display: flex; 
+    align-items: center;
+    gap: 8px; 
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap; 
+}
+
+.primary-btn:hover {
+    background-color: #1ed760; 
+}
+.primary-btn:active {
+    transform: scale(0.98);
+}
+
+/* Gaya untuk tombol Batalkan Edit */
+.cancel-btn {
+    text-decoration: none;
+    padding: 12px 25px;
+    border: 1px solid var(--border-color); /* Garis tepi untuk membedakan */
+    border-radius: 50px;
+    background-color: transparent;
+    color: var(--text-secondary);
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.cancel-btn:hover {
+    background-color: #333; 
+    color: var(--text-primary);
+}
+
+
+/* TABLE STYLES */
+.song-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95em;
+    background-color: var(--card-dark);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #1a1a1a;
+}
+
+.song-table thead tr {
+    color: var(--text-secondary);
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border-color);
+    text-transform: uppercase; 
+    letter-spacing: 0.5px;
+    font-size: 0.9em;
+    background-color: var(--content-dark);
+}
+
+.song-table th, .song-table td {
+    padding: 15px 15px;
+}
+
+.song-table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.1s;
+}
+.song-table tbody tr:last-child {
+    border-bottom: none;
+}
+.song-table tbody tr:hover {
+    background-color: #282828;
+}
+
+/* Gaya Tombol Aksi dalam Tabel */
+/* Container untuk tombol Edit dan Hapus */
+.action-cell {
+    text-align: center; 
+    display: flex;
+    gap: 10px; 
+    justify-content: left; 
+    align-items: center;
+}
+
+/* Gaya dasar untuk tombol/link aksi */
+.action-cell a, 
+.action-cell form button {
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px; 
+    white-space: nowrap;
+    min-width: 95px; 
+    justify-content: center;
+}
+
+/*Gaya untuk tombol Edit*/
+.edit-btn {
+    background-color: #FFC107; 
+    color: #121212; 
+}
+
+.edit-btn:hover {
+    background-color: #ffcd38;
+}
+
+/* Gaya untuk tombol Hapus*/
+.delete-btn {
+    background-color: #CC3333; 
+    color: var(--text-primary);
+}
+
+.delete-btn:hover {
+    background-color: #e64d4d;
+}
+
+
+.action-cell form {
+    display: inline;
+}
+
+
+/*GAYA UNTUK KOTAK ATURAN ADMIN (admin-rules-box)*/
+
+.admin-rules-box {
+    background-color: #212121; 
+    border: 1px solid #444; 
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.admin-rules-box .rules-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    border-bottom: 1px dashed #3a3a3a;
+    padding-bottom: 10px;
+}
+
+.admin-rules-box .rules-header h3 {
+    color: var(--primary-color); 
+    font-weight: 700;
+    margin: 0;
+    font-size: 1.2em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color:#CC3333;
+}
+
+.admin-rules-box .rules-header .fa-lock {
+    font-size: 1.5em;
+    color: var(--primary-color); 
+    color :#CC3333;
+}
+
+.admin-rules-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.admin-rules-box ul li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+    font-size: 1em;
+}
+
+.admin-rules-box ul li .check-icon {
+    color: #4CAF50; 
+    font-size: 1.2em;
+    margin-right: 10px;
+}
+
+.admin-rules-box ul li .warn-icon {
+    color: #FF6347; 
+    font-size: 1.2em;
+    margin-right: 10px;
+}
+
+.admin-rules-box ul li .rule-text {
+    line-height: 1.4;
+}
+
+/* Penyesuaian untuk info ID lagu */
+.song-id-info {
+    color: var(--text-secondary);
+    font-size: 1.1em;
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
